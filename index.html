@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMOS HSE Safety Induction</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 1000px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      color: #2c5364;
+      font-size: 26px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .progress {
+      margin: 10px 0 20px;
+      font-size: 14px;
+      color: #888;
+    }
+
+    /* PERFECT RESPONSIVE VIDEO */
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: black;
+      margin-bottom: 20px;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-next {
+      background-color: #2c5364;
+      color: white;
+    }
+
+    .btn-next:hover {
+      background-color: #1a333d;
+    }
+
+    .btn-start {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .btn-start:hover {
+      background-color: #1e7e34;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>🏗️ DMOS HSE Safety Induction Video</h1>
+  <p class="subtitle">Please watch all videos before proceeding to the quiz.</p>
+
+  <div class="progress" id="progressText">
+    Video 1 of 2
+  </div>
+
+  <!-- VIDEO -->
+  <div class="video-wrapper">
+    <iframe id="videoFrame"
+      src="https://www.youtube.com/embed/YOUR_VIDEO_ID_1"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <!-- BUTTON -->
+  <div id="controls">
+    <button class="btn btn-next" onclick="nextVideo()">Next</button>
+  </div>
+
+</div>
+
+<script>
+let currentVideo = 0;
+
+const videos = [
+  "https://www.youtube.com/embed/7XMUOBxd8Mg",
+  "https://www.youtube.com/embed/HVRT1NMej8k"
+];
+
+function nextVideo() {
+  currentVideo++;
+
+  const frame = document.getElementById("videoFrame");
+  const controls = document.getElementById("controls");
+  const progress = document.getElementById("progressText");
+
+  if (currentVideo < videos.length) {
+    frame.src = videos[currentVideo];
+    progress.innerText = `Video ${currentVideo + 1} of ${videos.length}`;
+  } else {
+    controls.innerHTML = `
+      <button class="btn btn-start" onclick="startQuiz()">Start Quiz</button>
+    `;
+    progress.innerText = "All videos completed ✔";
+  }
+}
+
+function startQuiz() {
+  const quizzes = [
+    "https://forms.office.com/r/uErqVt007N",
+    "https://forms.office.com/r/RhD58pX4cT",
+    "https://forms.office.com/r/sqrfcftNuB",
+    "https://forms.office.com/r/23XWLT84sN"
+  ];
+
+  const randomIndex = Math.floor(Math.random() * quizzes.length);
+  window.location.href = quizzes[randomIndex];
+}
+</script>
+
+</body>
+</html>
