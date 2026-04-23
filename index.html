@@ -29,7 +29,6 @@
     h1 {
       margin: 0;
       color: #2c5364;
-      font-size: 26px;
     }
 
     .subtitle {
@@ -43,11 +42,10 @@
       color: #888;
     }
 
-    /* PERFECT RESPONSIVE VIDEO */
     .video-wrapper {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%; /* 16:9 */
+      padding-bottom: 56.25%;
       height: 0;
       border-radius: 12px;
       overflow: hidden;
@@ -57,20 +55,24 @@
 
     .video-wrapper iframe {
       position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
       border: none;
     }
 
     .btn {
-      padding: 12px 28px;
-      font-size: 16px;
+      padding: 12px 24px;
+      font-size: 15px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
+      margin: 5px;
       transition: 0.3s;
+    }
+
+    .btn-back {
+      background-color: #6c757d;
+      color: white;
     }
 
     .btn-next {
@@ -78,17 +80,13 @@
       color: white;
     }
 
-    .btn-next:hover {
-      background-color: #1a333d;
-    }
-
     .btn-start {
       background-color: #28a745;
       color: white;
     }
 
-    .btn-start:hover {
-      background-color: #1e7e34;
+    .btn:hover {
+      opacity: 0.85;
     }
   </style>
 </head>
@@ -101,20 +99,18 @@
   <p class="subtitle">Please watch all videos before proceeding to the quiz.</p>
 
   <div class="progress" id="progressText">
-    Video 1 of 2
+    Video 1 of 3
   </div>
 
-  <!-- VIDEO -->
   <div class="video-wrapper">
     <iframe id="videoFrame"
       src="https://www.youtube.com/embed/8Gm9CrnnP_k"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowfullscreen>
     </iframe>
   </div>
 
-  <!-- BUTTON -->
   <div id="controls">
+    <button class="btn btn-back" onclick="prevVideo()">Back</button>
     <button class="btn btn-next" onclick="nextVideo()">Next</button>
   </div>
 
@@ -125,24 +121,42 @@ let currentVideo = 0;
 
 const videos = [
   "https://www.youtube.com/embed/8Gm9CrnnP_k",
-  "https://www.youtube.com/embed/dKLdwV0qSZw"
+  "https://www.youtube.com/embed/dKLdwV0qSZw",
+  "https://www.youtube.com/embed/fY3s4CBAhn4"
 ];
 
-function nextVideo() {
-  currentVideo++;
-
+function updateUI() {
   const frame = document.getElementById("videoFrame");
-  const controls = document.getElementById("controls");
   const progress = document.getElementById("progressText");
+  const controls = document.getElementById("controls");
 
-  if (currentVideo < videos.length) {
-    frame.src = videos[currentVideo];
-    progress.innerText = `Video ${currentVideo + 1} of ${videos.length}`;
-  } else {
+  frame.src = videos[currentVideo];
+  progress.innerText = `Video ${currentVideo + 1} of ${videos.length}`;
+
+  if (currentVideo === videos.length - 1) {
     controls.innerHTML = `
+      <button class="btn btn-back" onclick="prevVideo()">Back</button>
       <button class="btn btn-start" onclick="startQuiz()">Start Quiz</button>
     `;
-    progress.innerText = "All videos completed ✔";
+  } else {
+    controls.innerHTML = `
+      <button class="btn btn-back" onclick="prevVideo()">Back</button>
+      <button class="btn btn-next" onclick="nextVideo()">Next</button>
+    `;
+  }
+}
+
+function nextVideo() {
+  if (currentVideo < videos.length - 1) {
+    currentVideo++;
+    updateUI();
+  }
+}
+
+function prevVideo() {
+  if (currentVideo > 0) {
+    currentVideo--;
+    updateUI();
   }
 }
 
@@ -158,6 +172,9 @@ function startQuiz() {
   window.location.href = quizzes[randomIndex];
 }
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
