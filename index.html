@@ -83,7 +83,7 @@ let currentVideo = 0;
 
 let lastTime = 0;
 
-  // Track completed videos
+// Track completed videos
 let completedVideos = new Array(3).fill(false);
 
 const videos = [
@@ -98,7 +98,7 @@ function onYouTubeIframeAPIReady() {
     videoId: videos[currentVideo],
     playerVars: {
       controls: 1,
-      disablekb: 1, // disable keyboard skipping
+      disablekb: 1,
       modestbranding: 1
     },
     events: {
@@ -133,7 +133,7 @@ function onPlayerStateChange(event) {
   if (event.data === YT.PlayerState.ENDED) {
     document.getElementById("nextBtn").disabled = false;
 
-        // ✅ Mark video as completed
+    // ✅ Mark video as completed
     completedVideos[currentVideo] = true;
   }
 }
@@ -158,14 +158,14 @@ function nextVideo() {
   }
 }
 
-// Next video
-function nextVideo() {
-  currentVideo++;
+// Previous video
+function prevVideo() {
+  if (currentVideo > 0) {
+    currentVideo--;
 
-  if (currentVideo < videos.length) {
     player.loadVideoById(videos[currentVideo]);
 
-    // Lock only if not completed
+    // ✅ If already completed → Next unlocked
     document.getElementById("nextBtn").disabled =
       !completedVideos[currentVideo];
 
@@ -173,7 +173,6 @@ function nextVideo() {
       `Video ${currentVideo + 1} of ${videos.length}`;
 
     lastTime = 0;
-
   }
 }
 
