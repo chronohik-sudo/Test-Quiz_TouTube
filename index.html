@@ -81,20 +81,48 @@ button {
 let player;
 let currentVideo = 0;
 
+let lastTime = 0;
+let allowProgress = true;
+
 const videos = [
   "8Gm9CrnnP_k",
   "dKLdwV0qSZw",
   "fY3s4CBAhn4"
 ];
 
-// Load YouTube player
+// Load player
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
     videoId: videos[currentVideo],
+    playerVars: {
+      controls: 1,
+      disablekb: 1, // disable keyboard skipping
+      modestbranding: 1
+    },
     events: {
+      'onReady': onPlayerReady,
       'onStateChange': onPlayerStateChange
     }
   });
+}
+
+// Track playback
+function onPlayerReady() {
+  setInterval(trackProgress, 1000);
+}
+
+function trackProgress() {
+  if (!player || typeof player.getCurrentTime !== "function") return;
+
+  let currentTime = player.getCurrentTime();
+
+  // Detect skipping forward
+  if (currentTime > lastTime + 2 && allowProgress) {
+    // User skipped → force back
+    player.seekTo(lastTime);
+  }
+
+  lastTime = currentTime;
 }
 
 // Detect video end
@@ -113,6 +141,8 @@ function nextVideo() {
     document.getElementById("nextBtn").disabled = true;
     document.getElementById("progress").innerText =
       `Video ${currentVideo + 1} of ${videos.length}`;
+
+    lastTime = 0; // reset tracking
   } else {
     startQuiz();
   }
@@ -126,6 +156,8 @@ function prevVideo() {
     document.getElementById("nextBtn").disabled = false;
     document.getElementById("progress").innerText =
       `Video ${currentVideo + 1} of ${videos.length}`;
+
+    lastTime = 0;
   }
 }
 
