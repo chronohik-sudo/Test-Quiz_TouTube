@@ -82,7 +82,9 @@ let player;
 let currentVideo = 0;
 
 let lastTime = 0;
-let allowProgress = true;
+
+  // Track completed videos
+let completedVideos = new Array(3).fill(false);
 
 const videos = [
   "8Gm9CrnnP_k",
@@ -116,10 +118,11 @@ function trackProgress() {
 
   let currentTime = player.getCurrentTime();
 
-  // Detect skipping forward
-  if (currentTime > lastTime + 2 && allowProgress) {
-    // User skipped → force back
-    player.seekTo(lastTime);
+  // 🚫 Only block skipping if NOT completed
+  if (!completedVideos[currentVideo]) {
+    if (currentTime > lastTime + 2) {
+      player.seekTo(lastTime);
+    }
   }
 
   lastTime = currentTime;
@@ -129,6 +132,9 @@ function trackProgress() {
 function onPlayerStateChange(event) {
   if (event.data === YT.PlayerState.ENDED) {
     document.getElementById("nextBtn").disabled = false;
+
+        // ✅ Mark video as completed
+    completedVideos[currentVideo] = true;
   }
 }
 
@@ -138,26 +144,36 @@ function nextVideo() {
 
   if (currentVideo < videos.length) {
     player.loadVideoById(videos[currentVideo]);
-    document.getElementById("nextBtn").disabled = true;
+
+    // Lock only if not completed
+    document.getElementById("nextBtn").disabled =
+      !completedVideos[currentVideo];
+
     document.getElementById("progress").innerText =
       `Video ${currentVideo + 1} of ${videos.length}`;
 
-    lastTime = 0; // reset tracking
+    lastTime = 0;
   } else {
     startQuiz();
   }
 }
 
-// Previous video
-function prevVideo() {
-  if (currentVideo > 0) {
-    currentVideo--;
+// Next video
+function nextVideo() {
+  currentVideo++;
+
+  if (currentVideo < videos.length) {
     player.loadVideoById(videos[currentVideo]);
-    document.getElementById("nextBtn").disabled = false;
+
+    // Lock only if not completed
+    document.getElementById("nextBtn").disabled =
+      !completedVideos[currentVideo];
+
     document.getElementById("progress").innerText =
       `Video ${currentVideo + 1} of ${videos.length}`;
 
     lastTime = 0;
+
   }
 }
 
